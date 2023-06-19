@@ -1068,6 +1068,12 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM = 1000497001,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT = 1000498000,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT = 1000499000,
+    VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_PICTURE_INFO_MESA = 1000509000,
+    VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_SESSION_PARAMETERS_CREATE_INFO_MESA = 1000509001,
+    VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_SESSION_PARAMETERS_ADD_INFO_MESA = 1000509002,
+    VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_DPB_SLOT_INFO_MESA = 1000509003,
+    VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_CAPABILITIES_MESA = 1000509004,
+    VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_PROFILE_INFO_MESA = 1000509005,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM = 1000510000,
     VK_STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM = 1000510001,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT = 1000524000,
@@ -7944,6 +7950,7 @@ typedef enum VkVideoCodecOperationFlagBitsKHR {
 #endif
     VK_VIDEO_CODEC_OPERATION_DECODE_H264_BIT_KHR = 0x00000001,
     VK_VIDEO_CODEC_OPERATION_DECODE_H265_BIT_KHR = 0x00000002,
+    VK_VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_MESA = 0x01000000,
     VK_VIDEO_CODEC_OPERATION_FLAG_BITS_MAX_ENUM_KHR = 0x7FFFFFFF
 } VkVideoCodecOperationFlagBitsKHR;
 typedef VkFlags VkVideoCodecOperationFlagsKHR;
@@ -16787,6 +16794,59 @@ typedef struct VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT {
     void*              pNext;
     VkBool32           dynamicRenderingUnusedAttachments;
 } VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT;
+
+#define VK_MESA_video_decode_av1 1
+#include "vk_video/vulkan_video_codec_av1mesa.h"
+#include "vk_video/vulkan_video_codec_av1mesa_decode.h"
+#define VK_MESA_VIDEO_DECODE_AV1_SPEC_VERSION 1
+#define VK_MESA_VIDEO_DECODE_AV1_EXTENSION_NAME "VK_MESA_video_decode_av1"
+
+typedef enum VkVideoDecodeAV1CapabilityFlagBitsMESA {
+    VK_VIDEO_DECODE_AV1_CAPABILITY_EXTERNAL_FILM_GRAIN_MESA = 0x00000001,
+    VK_VIDEO_DECODE_AV1_CAPABILITY_FLAG_BITS_MAX_ENUM_MESA = 0x7FFFFFFF
+} VkVideoDecodeAV1CapabilityFlagBitsMESA;
+typedef VkFlags VkVideoDecodeAV1CapabilityFlagsMESA;
+typedef struct VkVideoDecodeAV1PictureInfoMESA {
+    VkStructureType                sType;
+    const void*                    pNext;
+    StdVideoAV1MESAFrameHeader*    frame_header;
+    StdVideoAV1MESATileList*       tile_list;
+    uint8_t                        skip_mode_frame_idx[2];
+} VkVideoDecodeAV1PictureInfoMESA;
+
+typedef struct VkVideoDecodeAV1DpbSlotInfoMESA {
+    VkStructureType    sType;
+    const void*        pNext;
+    uint8_t            frame_idx;
+    uint8_t            ref_order_hints[7];
+    uint8_t            cdf_update_disabled;
+} VkVideoDecodeAV1DpbSlotInfoMESA;
+
+typedef struct VkVideoDecodeAV1SessionParametersAddInfoMESA {
+    VkStructureType                   sType;
+    const void*                       pNext;
+    StdVideoAV1MESASequenceHeader*    sequence_header;
+} VkVideoDecodeAV1SessionParametersAddInfoMESA;
+
+typedef struct VkVideoDecodeAV1SessionParametersCreateInfoMESA {
+    VkStructureType                                        sType;
+    const void*                                            pNext;
+    const VkVideoDecodeAV1SessionParametersAddInfoMESA*    pParametersAddInfo;
+} VkVideoDecodeAV1SessionParametersCreateInfoMESA;
+
+typedef struct VkVideoDecodeAV1ProfileInfoMESA {
+    VkStructureType           sType;
+    const void*               pNext;
+    StdVideoAV1MESAProfile    stdProfileIdc;
+} VkVideoDecodeAV1ProfileInfoMESA;
+
+typedef struct VkVideoDecodeAV1CapabiltiesMESA {
+    VkStructureType                        sType;
+    const void*                            pNext;
+    VkVideoDecodeAV1CapabilityFlagsMESA    flags;
+    StdVideoAV1MESALevel                   maxLevelIdc;
+} VkVideoDecodeAV1CapabiltiesMESA;
+
 
 
 

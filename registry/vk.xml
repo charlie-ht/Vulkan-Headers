@@ -519,6 +519,8 @@ typedef void* <name>MTLSharedEvent_id</name>;
         <type requires="VkVideoEncodeH265CtbSizeFlagBitsEXT"                category="bitmask">typedef <type>VkFlags</type> <name>VkVideoEncodeH265CtbSizeFlagsEXT</name>;</type>
         <type requires="VkVideoEncodeH265TransformBlockSizeFlagBitsEXT"     category="bitmask">typedef <type>VkFlags</type> <name>VkVideoEncodeH265TransformBlockSizeFlagsEXT</name>;</type>
 
+            <comment>Video Decode AV1 MESA extension</comment>
+        <type requires="VkVideoDecodeAV1CapabilityFlagBitsMESA"     category="bitmask">typedef <type>VkFlags</type> <name>VkVideoDecodeAV1CapabilityFlagsMESA</name>;</type>
             <comment>Types which can be void pointers or class pointers, selected at compile time</comment>
         <type category="handle"                           objtypeenum="VK_OBJECT_TYPE_INSTANCE"><type>VK_DEFINE_HANDLE</type>(<name>VkInstance</name>)</type>
         <type category="handle" parent="VkInstance"       objtypeenum="VK_OBJECT_TYPE_PHYSICAL_DEVICE"><type>VK_DEFINE_HANDLE</type>(<name>VkPhysicalDevice</name>)</type>
@@ -898,6 +900,9 @@ typedef void* <name>MTLSharedEvent_id</name>;
         <type name="VkVideoEncodeH265RateControlFlagBitsEXT"            category="enum"/>
         <type name="VkVideoEncodeH265CtbSizeFlagBitsEXT"                category="enum"/>
         <type name="VkVideoEncodeH265TransformBlockSizeFlagBitsEXT"     category="enum"/>
+
+           <comment>Video AV1 Decode MESA extensions</comment>
+        <type name="VkVideoDecodeAV1CapabilityFlagBitsMESA"     category="enum"/>
 
         <comment>The PFN_vk*Function types are used by VkAllocationCallbacks below</comment>
         <type category="funcpointer">typedef void (VKAPI_PTR *<name>PFN_vkInternalAllocationNotification</name>)(
@@ -7050,6 +7055,14 @@ typedef void* <name>MTLSharedEvent_id</name>;
             <member optional="true">const <type>void</type>*              <name>pNext</name></member>
             <member>const <type>StdVideoEncodeH265ReferenceInfo</type>*   <name>pStdReferenceInfo</name></member>
         </type>
+        <type category="include" name="vk_video/vulkan_video_codec_av1mesa.h">#include "vk_video/vulkan_video_codec_av1mesa.h"</type>
+        <type category="include" name="vk_video/vulkan_video_codec_av1mesa_decode.h">#include "vk_video/vulkan_video_codec_av1mesa_decode.h"</type>
+        <type requires="vk_video/vulkan_video_codec_av1mesa.h" name="StdVideoAV1MESAProfile"/>
+        <type requires="vk_video/vulkan_video_codec_av1mesa.h" name="StdVideoAV1MESALevel"/>
+        <type requires="vk_video/vulkan_video_codec_av1mesa.h" name="StdVideoAV1MESAFrameHeader"/>
+        <type requires="vk_video/vulkan_video_codec_av1mesa.h" name="StdVideoAV1MESASequenceHeader"/>
+        <type requires="vk_video/vulkan_video_codec_av1mesa_decode.h" name="StdVideoAV1MESATileList"/>
+
         <type category="struct" name="VkPhysicalDeviceInheritedViewportScissorFeaturesNV" structextends="VkPhysicalDeviceFeatures2,VkDeviceCreateInfo">
             <member values="VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV"><type>VkStructureType</type> <name>sType</name></member>
             <member optional="true"><type>void</type>*                               <name>pNext</name></member>
@@ -8361,6 +8374,46 @@ typedef void* <name>MTLSharedEvent_id</name>;
             <member values="VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_SCREEN_BUFFER_FEATURES_QNX"><type>VkStructureType</type> <name>sType</name></member>
             <member optional="true"><type>void</type>*                       <name>pNext</name></member>
             <member><type>VkBool32</type>                                    <name>screenBufferImport</name></member>
+
+        <type category="struct" name="VkVideoDecodeAV1PictureInfoMESA" structextends="VkVideoDecodeInfoKHR">
+            <member values="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_PICTURE_INFO_MESA"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true" noautovalidity="true">const <type>void</type>* <name>pNext</name></member>
+            <member><type>StdVideoAV1MESAFrameHeader</type>* <name>frame_header</name></member>
+            <member><type>StdVideoAV1MESATileList</type>* <name>tile_list</name></member>
+            <member><type>uint8_t</type> <name>skip_mode_frame_idx</name>[2]</member>
+        </type>
+
+        <type category="struct" name="VkVideoDecodeAV1DpbSlotInfoMESA" structextends="VkVideoReferenceSlotInfoKHR">
+            <member values="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_DPB_SLOT_INFO_MESA"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true" noautovalidity="true">const <type>void</type>* <name>pNext</name></member>
+            <member><type>uint8_t</type> <name>frame_idx</name></member>
+            <member><type>uint8_t</type> <name>ref_order_hints</name>[7]</member>
+            <member><type>uint8_t</type> <name>cdf_update_disabled</name></member>
+        </type>
+
+        <type category="struct" name="VkVideoDecodeAV1SessionParametersAddInfoMESA" structextends="VkVideoSessionParametersUpdateInfoKHR">
+            <member values="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_SESSION_PARAMETERS_ADD_INFO_MESA"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true" noautovalidity="true">const <type>void</type>* <name>pNext</name></member>
+            <member><type>StdVideoAV1MESASequenceHeader</type>* <name>sequence_header</name></member>
+        </type>
+
+        <type category="struct" name="VkVideoDecodeAV1SessionParametersCreateInfoMESA" structextends="VkVideoSessionParametersCreateInfoKHR">
+            <member values="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_SESSION_PARAMETERS_CREATE_INFO_MESA"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true" noautovalidity="true">const <type>void</type>* <name>pNext</name></member>
+            <member>const <type>VkVideoDecodeAV1SessionParametersAddInfoMESA</type>* <name>pParametersAddInfo</name></member>
+        </type>
+
+        <type category="struct" name="VkVideoDecodeAV1ProfileInfoMESA" structextends="VkVideoProfileInfoKHR,VkQueryPoolCreateInfo">
+            <member values="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_PROFILE_INFO_MESA"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true" noautovalidity="true">const <type>void</type>* <name>pNext</name></member>
+            <member><type>StdVideoAV1MESAProfile</type> <name>stdProfileIdc</name></member>
+        </type>
+
+        <type category="struct" name="VkVideoDecodeAV1CapabiltiesMESA" returnedonly="true" structextends="VkVideoCapabilitiesKHR">
+            <member values="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_CAPABILITIES_MESA"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true" noautovalidity="true">const <type>void</type>* <name>pNext</name></member>
+            <member><type>VkVideoDecodeAV1CapabilityFlagsMESA</type> <name>flags</name></member>
+            <member><type>StdVideoAV1MESALevel</type> <name>maxLevelIdc</name></member>
         </type>
     </types>
 
@@ -10415,6 +10468,10 @@ typedef void* <name>MTLSharedEvent_id</name>;
     <enums name="VkShaderCodeTypeEXT" type="enum">
         <enum value="0" name="VK_SHADER_CODE_TYPE_BINARY_EXT"/>
         <enum value="1" name="VK_SHADER_CODE_TYPE_SPIRV_EXT"/>
+    </enums>
+
+    <enums name="VkVideoDecodeAV1CapabilityFlagBitsMESA" type="bitmask">
+        <enum bitpos="0"    name="VK_VIDEO_DECODE_AV1_CAPABILITY_EXTERNAL_FILM_GRAIN_MESA"/>
     </enums>
 
     <commands comment="Vulkan command definitions">
@@ -22315,10 +22372,25 @@ typedef void* <name>MTLSharedEvent_id</name>;
                 <enum value="&quot;VK_EXT_extension_509&quot;"              name="VK_EXT_EXTENSION_509_EXTENSION_NAME"/>
             </require>
         </extension>
-        <extension name="VK_MESA_extension_510" number="510" author="MESA" contact="Dave Airlie @airlied" type="device" supported="disabled">
+        <extension name="VK_MESA_video_decode_av1" number="510" author="MESA" contact="Dave Airlie @airlied" type="device" depends="VK_KHR_video_decode_queue" supported="vulkan">
             <require>
-                <enum value="0"                                             name="VK_MESA_EXTENSION_510_SPEC_VERSION"/>
-                <enum value="&quot;VK_MESA_extension_510&quot;"             name="VK_MESA_EXTENSION_510_EXTENSION_NAME"/>
+                <enum value="1"                                             name="VK_MESA_VIDEO_DECODE_AV1_SPEC_VERSION"/>
+                <enum value="&quot;VK_MESA_video_decode_av1&quot;"          name="VK_MESA_VIDEO_DECODE_AV1_EXTENSION_NAME"/>
+                <enum bitpos="24" extends="VkVideoCodecOperationFlagBitsKHR" name="VK_VIDEO_CODEC_OPERATION_DECODE_AV1_BIT_MESA"/>
+                <enum offset="0" extends="VkStructureType"                  name="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_PICTURE_INFO_MESA"/>
+                <enum offset="1" extends="VkStructureType"                  name="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_SESSION_PARAMETERS_CREATE_INFO_MESA"/>
+                <enum offset="2" extends="VkStructureType"                  name="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_SESSION_PARAMETERS_ADD_INFO_MESA"/>
+                <enum offset="3" extends="VkStructureType"                  name="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_DPB_SLOT_INFO_MESA"/>
+                <enum offset="4" extends="VkStructureType"                  name="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_CAPABILITIES_MESA"/>
+                <enum offset="5" extends="VkStructureType"                  name="VK_STRUCTURE_TYPE_VIDEO_DECODE_AV1_PROFILE_INFO_MESA"/>
+                <type name="VkVideoDecodeAV1PictureInfoMESA"/>
+                <type name="VkVideoDecodeAV1DpbSlotInfoMESA"/>
+                <type name="VkVideoDecodeAV1SessionParametersAddInfoMESA"/>
+                <type name="VkVideoDecodeAV1SessionParametersCreateInfoMESA"/>
+                <type name="VkVideoDecodeAV1ProfileInfoMESA"/>
+                <type name="VkVideoDecodeAV1CapabilityFlagBitsMESA"/>
+                <type name="VkVideoDecodeAV1CapabilityFlagsMESA"/>
+                <type name="VkVideoDecodeAV1CapabiltiesMESA"/>
             </require>
         </extension>
         <extension name="VK_QCOM_multiview_per_view_render_areas" number="511" type="device" author="QCOM" contact="Jeff Leger @jackohound" supported="vulkan">

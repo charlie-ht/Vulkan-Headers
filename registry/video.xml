@@ -21,6 +21,7 @@ The current public version of video.xml is maintained in the default branch
         <type name="uint16_t" requires="stdint"/>
         <type name="uint8_t" requires="stdint"/>
         <type name="int32_t" requires="stdint"/>
+        <type name="int16_t" requires="stdint"/>
         <type name="int8_t" requires="stdint"/>
 
             <!-- vulkan_video_codecs_common macros -->
@@ -42,6 +43,10 @@ The current public version of video.xml is maintained in the default branch
             <!-- vulkan_video_codec_h265std_encode.h macros -->
         <type category="define" requires="VK_MAKE_VIDEO_STD_VERSION">// Vulkan 0.9 provisional Vulkan video H.265 encode std specification version number
 #define <name>VK_STD_VULKAN_VIDEO_CODEC_H265_ENCODE_API_VERSION_0_9_11</name> <type>VK_MAKE_VIDEO_STD_VERSION</type>(0, 9, 11)</type>
+
+            <!-- vulkan_video_codec_av1mesa_decode.h macros -->
+        <type category="define" requires="VK_MAKE_VIDEO_STD_VERSION">// Vulkan 0.9 provisional Vulkan video AV1 decode std specification version number
+#define <name>VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_API_VERSION_0_9_9</name> <type>VK_MAKE_VIDEO_STD_VERSION</type>(0, 9, 9)</type>
 
             <!-- vulkan_video_codec_h264std.h enumerated types -->
         <type name="StdVideoH264ChromaFormatIdc" category="enum"/>
@@ -824,6 +829,276 @@ The current public version of video.xml is maintained in the default branch
             <member><type>int32_t</type>                              <name>PicOrderCntVal</name><comment>Picture order count derived as specified in 8.3.1</comment></member>
             <member><type>uint8_t</type>                              <name>TemporalId</name><comment>Temporal ID, as defined in 7.4.2.2</comment></member>
         </type>
+
+            <!-- vulkan_video_codec_av1mesa.h enumerated types -->
+        <type name="StdVideoAV1MESAProfile" category="enum"/>
+        <type name="StdVideoAV1MESALevel" category="enum"/>
+
+            <!-- vulkan_video_codec_av1mesa.h structs -->
+        <type category="struct" name="StdVideoAV1MESAFilmGrainFlags">
+            <member><type>uint8_t</type>                              <name>apply_grain</name></member>
+            <member><type>uint8_t</type>                              <name>chroma_scaling_from_luma</name></member>
+            <member><type>uint8_t</type>                              <name>overlap_flag</name></member>
+            <member><type>uint8_t</type>                              <name>clip_to_restricted_range</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAFilmGrainParameters">
+            <member><type>StdVideoAV1MESAFilmGrainFlags</type>        <name>flags</name></member>
+            <member><type>uint32_t</type>                             <name>grain_scaling_minus_8</name></member>
+            <member><type>uint32_t</type>                             <name>ar_coeff_lag</name></member>
+            <member><type>uint32_t</type>                             <name>ar_coeff_shift_minus_6</name></member>
+            <member><type>uint32_t</type>                             <name>grain_scale_shift</name></member>
+            <member><type>uint16_t</type>                             <name>grain_seed</name></member>
+            <member><type>uint8_t</type>                              <name>num_y_points</name></member>
+            <member><type>uint8_t</type>                              <name>point_y_value</name>[14]</member>
+            <member><type>uint8_t</type>                              <name>point_y_scaling</name>[14]</member>
+            <member><type>uint8_t</type>                              <name>num_cb_points</name></member>
+            <member><type>uint8_t</type>                              <name>point_cb_value</name>[10]</member>
+            <member><type>uint8_t</type>                              <name>point_cb_scaling</name>[10]</member>
+            <member><type>uint8_t</type>                              <name>num_cr_points</name></member>
+            <member><type>uint8_t</type>                              <name>point_cr_value</name>[10]</member>
+            <member><type>uint8_t</type>                              <name>point_cr_scaling</name>[10]</member>
+            <member><type>int8_t</type>                               <name>ar_coeffs_y_plus_128</name>[24]</member>
+            <member><type>int8_t</type>                               <name>ar_coeffs_cb_plus_128</name>[25]</member>
+            <member><type>int8_t</type>                               <name>ar_coeffs_cr_plus_128</name>[25]</member>
+            <member><type>uint8_t</type>                              <name>cb_mult</name></member>
+            <member><type>uint8_t</type>                              <name>cb_luma_mult</name></member>
+            <member><type>uint16_t</type>                             <name>cb_offset</name></member>
+            <member><type>uint8_t</type>                              <name>cr_mult</name></member>
+            <member><type>uint8_t</type>                              <name>cr_luma_mult</name></member>
+            <member><type>uint16_t</type>                             <name>cr_offset</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAGlobalMotionFlags">
+            <member><type>uint8_t</type>                              <name>gm_invalid</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAGlobalMotion">
+            <member><type>StdVideoAV1MESAGlobalMotionFlags</type>     <name>flags</name></member>
+            <member><type>uint8_t</type>                              <name>gm_type</name></member>
+            <member><type>uint32_t</type>                             <name>gm_params</name>[6]</member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESALoopRestoration">
+            <member><type>uint8_t</type>                              <name>lr_type</name>[3]</member>
+            <member><type>uint8_t</type>                              <name>lr_unit_shift</name></member>
+            <member><type>uint8_t</type>                              <name>lr_uv_shift</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESATileInfoFlags">
+            <member><type>uint8_t</type>                              <name>uniform_tile_spacing_flag</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESATileInfo">
+            <member><type>StdVideoAV1MESATileInfoFlags</type>         <name>flags</name></member>
+            <member><type>uint8_t</type>                              <name>tile_cols</name></member>
+            <member><type>uint8_t</type>                              <name>tile_rows</name></member>
+            <member><type>uint8_t</type>                              <name>tile_start_col_sb</name>[64]</member>
+            <member><type>uint8_t</type>                              <name>tile_start_row_sb</name>[64]</member>
+            <member><type>uint8_t</type>                              <name>width_in_sbs_minus_1</name>[64]</member>
+            <member><type>uint8_t</type>                              <name>height_in_sbs_minus_1</name>[64]</member>
+            <member><type>uint16_t</type>                             <name>context_update_tile_id</name></member>
+            <member><type>uint8_t</type>                              <name>tile_size_bytes_minus1</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAQuantizationFlags">
+            <member><type>uint8_t</type>                              <name>using_qmatrix</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAQuantization">
+            <member><type>StdVideoAV1MESAQuantizationFlags</type>     <name>flags</name></member>
+            <member><type>uint8_t</type>                              <name>base_q_idx</name></member>
+            <member><type>int8_t</type>                               <name>delta_q_y_dc</name></member>
+            <member><type>uint8_t</type>                              <name>diff_uv_delta</name></member>
+            <member><type>int8_t</type>                               <name>delta_q_u_dc</name></member>
+            <member><type>int8_t</type>                               <name>delta_q_u_ac</name></member>
+            <member><type>int8_t</type>                               <name>delta_q_v_dc</name></member>
+            <member><type>int8_t</type>                               <name>delta_q_v_ac</name></member>
+            <member><type>uint8_t</type>                              <name>qm_y</name></member>
+            <member><type>uint8_t</type>                              <name>qm_u</name></member>
+            <member><type>uint8_t</type>                              <name>qm_v</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESACDEF">
+            <member><type>uint8_t</type>                              <name>damping_minus_3</name></member>
+            <member><type>uint8_t</type>                              <name>bits</name></member>
+            <member><type>uint8_t</type>                              <name>y_pri_strength</name>[8]</member>
+            <member><type>uint8_t</type>                              <name>y_sec_strength</name>[8]</member>
+            <member><type>uint8_t</type>                              <name>uv_pri_strength</name>[8]</member>
+            <member><type>uint8_t</type>                              <name>uv_sec_strength</name>[8]</member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESADeltaQFlags">
+            <member><type>uint8_t</type>                              <name>delta_lf_present</name></member>
+            <member><type>uint8_t</type>                              <name>delta_lf_multi</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESADeltaQ">
+            <member><type>StdVideoAV1MESADeltaQFlags</type>           <name>flags</name></member>
+            <member><type>uint8_t</type>                              <name>delta_q_res</name></member>
+            <member><type>uint8_t</type>                              <name>delta_lf_res</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESASegmentationFlags">
+            <member><type>uint8_t</type>                              <name>enabled</name></member>
+            <member><type>uint8_t</type>                              <name>update_map</name></member>
+            <member><type>uint8_t</type>                              <name>temporal_update</name></member>
+            <member><type>uint8_t</type>                              <name>update_data</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESASegmentation">
+            <member><type>StdVideoAV1MESASegmentationFlags</type>      <name>flags</name></member>
+            <member><type>uint8_t</type>                               <name>feature_enabled_bits</name>[8]</member>
+            <member><type>int16_t</type>                               <name>feature_data</name>[8][8]</member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESALoopFilterFlags">
+            <member><type>uint8_t</type>                              <name>delta_enabled</name></member>
+            <member><type>uint8_t</type>                              <name>delta_update</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESALoopFilter">
+            <member><type>StdVideoAV1MESALoopFilterFlags</type>       <name>flags</name></member>
+            <member><type>uint8_t</type>                              <name>level</name>[4]</member>
+            <member><type>uint8_t</type>                              <name>sharpness</name></member>
+            <member><type>int8_t</type>                               <name>ref_deltas</name>[8]</member>
+            <member><type>int8_t</type>                               <name>mode_deltas</name>[2]</member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAFrameHeaderFlags">
+            <member><type>uint8_t</type>                              <name>error_resilient_mode</name></member>
+            <member><type>uint8_t</type>                              <name>disable_cdf_update</name></member>
+            <member><type>uint8_t</type>                              <name>use_superres</name></member>
+            <member><type>uint8_t</type>                              <name>render_and_frame_size_different</name></member>
+            <member><type>uint8_t</type>                              <name>allow_screen_content_tools</name></member>
+            <member><type>uint8_t</type>                              <name>is_filter_switchable</name></member>
+            <member><type>uint8_t</type>                              <name>force_integer_mv</name></member>
+            <member><type>uint8_t</type>                              <name>frame_size_override_flag</name></member>
+            <member><type>uint8_t</type>                              <name>buffer_removal_time_present_flag</name></member>
+            <member><type>uint8_t</type>                              <name>allow_intrabc</name></member>
+            <member><type>uint8_t</type>                              <name>frame_refs_short_signaling</name></member>
+            <member><type>uint8_t</type>                              <name>allow_high_precision_mv</name></member>
+            <member><type>uint8_t</type>                              <name>is_motion_mode_switchable</name></member>
+            <member><type>uint8_t</type>                              <name>use_ref_frame_mvs</name></member>
+            <member><type>uint8_t</type>                              <name>disable_frame_end_update_cdf</name></member>
+            <member><type>uint8_t</type>                              <name>allow_warped_motion</name></member>
+            <member><type>uint8_t</type>                              <name>reduced_tx_set</name></member>
+            <member><type>uint8_t</type>                              <name>reference_select</name></member>
+            <member><type>uint8_t</type>                              <name>skip_mode_present</name></member>
+            <member><type>uint8_t</type>                              <name>delta_q_present</name></member>
+            <member><type>uint8_t</type>                              <name>uses_lr</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAFrameHeader">
+            <member><type>StdVideoAV1MESAFrameHeaderFlags</type>      <name>flags</name></member>
+            <member><type>uint32_t</type>                             <name>frame_presentation_time</name></member>
+            <member><type>uint32_t</type>                             <name>display_frame_id</name></member>
+            <member><type>uint32_t</type>                             <name>current_frame_id</name></member>
+            <member><type>uint8_t</type>                              <name>frame_to_show_map_idx</name></member>
+            <member><type>uint8_t</type>                              <name>frame_type</name></member>
+            <member><type>uint8_t</type>                              <name>order_hint</name></member>
+            <member><type>uint8_t</type>                              <name>primary_ref_frame</name></member>
+            <member><type>uint16_t</type>                             <name>frame_width_minus_1</name></member>
+            <member><type>uint16_t</type>                             <name>frame_height_minus_1</name></member>
+            <member><type>uint16_t</type>                             <name>render_width_minus_1</name></member>
+            <member><type>uint16_t</type>                             <name>render_height_minus_1</name></member>
+            <member><type>uint8_t</type>                              <name>coded_denom</name></member>
+            <member><type>uint8_t</type>                              <name>refresh_frame_flags</name></member>
+            <member><type>uint8_t</type>                              <name>ref_order_hint</name>[8]</member>
+            <member><type>int8_t</type>                               <name>ref_frame_idx</name>[7]</member>
+            <member><type>uint32_t</type>                             <name>delta_frame_id_minus1</name>[7]</member>
+            <member><type>uint8_t</type>                              <name>interpolation_filter</name></member>
+            <member><type>uint8_t</type>                              <name>tx_mode</name></member>
+            <member><type>StdVideoAV1MESATileInfo</type>              <name>tiling</name></member>
+            <member><type>StdVideoAV1MESAQuantization</type>          <name>quantization</name></member>
+            <member><type>StdVideoAV1MESASegmentation</type>          <name>segmentation</name></member>
+            <member><type>StdVideoAV1MESADeltaQ</type>                <name>delta_q</name></member>
+            <member><type>StdVideoAV1MESALoopFilter</type>            <name>loop_filter</name></member>
+            <member><type>StdVideoAV1MESACDEF</type>                  <name>cdef</name></member>
+            <member><type>StdVideoAV1MESALoopRestoration</type>       <name>lr</name></member>
+            <member><type>StdVideoAV1MESAGlobalMotion</type>          <name>global_motion</name>[8]</member>
+            <member><type>StdVideoAV1MESAFilmGrainParameters</type>   <name>film_grain</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAScreenCoding">
+            <member><type>uint8_t</type>                              <name>seq_force_screen_content_tools</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESATimingInfoFlags">
+            <member><type>uint8_t</type>                              <name>equal_picture_interval</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESATimingInfo">
+            <member><type>StdVideoAV1MESATimingInfoFlags</type>       <name>flags</name></member>
+            <member><type>uint32_t</type>                             <name>num_units_in_display_tick</name></member>
+            <member><type>uint32_t</type>                             <name>time_scale</name></member>
+            <member><type>uint32_t</type>                             <name>num_ticks_per_picture_minus_1</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAColorConfigFlags">
+            <member><type>uint8_t</type>                              <name>mono_chrome</name></member>
+            <member><type>uint8_t</type>                              <name>color_range</name></member>
+            <member><type>uint8_t</type>                              <name>separate_uv_delta_q</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESAColorConfig">
+            <member><type>StdVideoAV1MESAColorConfigFlags</type>      <name>flags</name></member>
+            <member><type>uint8_t</type>                              <name>bit_depth</name></member>
+            <member><type>uint8_t</type>                              <name>subsampling_x</name></member>
+            <member><type>uint8_t</type>                              <name>subsampling_y</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESASequenceHeaderFlags">
+            <member><type>uint8_t</type>                              <name>still_picture</name></member>
+            <member><type>uint8_t</type>                              <name>reduced_still_picture_header</name></member>
+            <member><type>uint8_t</type>                              <name>use_128x128_superblock</name></member>
+            <member><type>uint8_t</type>                              <name>enable_filter_intra</name></member>
+            <member><type>uint8_t</type>                              <name>enable_intra_edge_filter</name></member>
+            <member><type>uint8_t</type>                              <name>enable_interintra_compound</name></member>
+            <member><type>uint8_t</type>                              <name>enable_masked_compound</name></member>
+            <member><type>uint8_t</type>                              <name>enable_warped_motion</name></member>
+            <member><type>uint8_t</type>                              <name>enable_dual_filter</name></member>
+            <member><type>uint8_t</type>                              <name>enable_order_hint</name></member>
+            <member><type>uint8_t</type>                              <name>enable_jnt_comp</name></member>
+            <member><type>uint8_t</type>                              <name>enable_ref_frame_mvs</name></member>
+            <member><type>uint8_t</type>                              <name>frame_id_numbers_present_flag</name></member>
+            <member><type>uint8_t</type>                              <name>enable_superres</name></member>
+            <member><type>uint8_t</type>                              <name>enable_cdef</name></member>
+            <member><type>uint8_t</type>                              <name>enable_restoration</name></member>
+            <member><type>uint8_t</type>                              <name>film_grain_params_present</name></member>
+            <member><type>uint8_t</type>                              <name>timing_info_present_flag</name></member>
+            <member><type>uint8_t</type>                              <name>initial_display_delay_present_flag</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESASequenceHeader">
+            <member><type>StdVideoAV1MESASequenceHeaderFlags</type>   <name>flags</name></member>
+            <member><type>StdVideoAV1MESAProfile</type>               <name>seq_profile</name></member>
+            <member><type>uint8_t</type>                              <name>frame_width_bits_minus_1</name></member>
+            <member><type>uint8_t</type>                              <name>frame_height_bits_minus_1</name></member>
+            <member><type>uint16_t</type>                             <name>max_frame_width_minus_1</name></member>
+            <member><type>uint16_t</type>                             <name>max_frame_height_minus_1</name></member>
+            <member><type>uint8_t</type>                              <name>delta_frame_id_length_minus_2</name></member>
+            <member><type>uint8_t</type>                              <name>additional_frame_id_length_minus_1</name></member>
+            <member><type>uint8_t</type>                              <name>order_hint_bits_minus_1</name></member>
+            <member><type>uint8_t</type>                              <name>seq_choose_integer_mv</name></member>
+            <member><type>uint8_t</type>                              <name>seq_force_integer_mv</name></member>
+            <member><type>StdVideoAV1MESATimingInfo</type>            <name>timing_info</name></member>
+            <member><type>StdVideoAV1MESAColorConfig</type>           <name>color_config</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESATile">
+            <member><type>uint16_t</type>                              <name>tg_start</name></member>
+            <member><type>uint16_t</type>                              <name>tg_end</name></member>
+            <member><type>uint16_t</type>                              <name>row</name></member>
+            <member><type>uint16_t</type>                              <name>column</name></member>
+            <member><type>uint32_t</type>                              <name>size</name></member>
+            <member><type>uint32_t</type>                              <name>offset</name></member>
+        </type>
+
+        <type category="struct" name="StdVideoAV1MESATileList">
+            <member><type>StdVideoAV1MESATile</type>*                  <name>tile_list</name></member>
+            <member><type>uint32_t</type>                              <name>nb_tiles</name></member>
+        </type>
     </types>
 
         <!-- vulkan_video_codec_h264std.h enums -->
@@ -1031,6 +1306,40 @@ The current public version of video.xml is maintained in the default branch
         <enum name="STD_VIDEO_H265_ASPECT_RATIO_IDC_INVALID"                value="0x7FFFFFFF"/>
     </enums>
 
+        <!-- vulkan_video_codec_av1mesa.h enums -->
+    <enums name="StdVideoAV1MESAProfile" type="enum">
+        <enum name="STD_VIDEO_AV1_MESA_PROFILE_MAIN"                        value="0"/>
+        <enum name="STD_VIDEO_AV1_MESA_PROFILE_HIGH"                        value="1"/>
+        <enum name="STD_VIDEO_AV1_MESA_PROFILE_PROFESSIONAL"                value="2"/>
+    </enums>
+
+    <enums name="StdVideoAV1MESALevel" type="enum">
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_2_0"                           value="0"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_2_1"                           value="1"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_2_2"                           value="2"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_2_3"                           value="3"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_3_0"                           value="4"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_3_1"                           value="5"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_3_2"                           value="6"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_3_3"                           value="7"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_4_0"                           value="8"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_4_1"                           value="9"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_4_2"                           value="10"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_4_3"                           value="11"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_5_0"                           value="12"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_5_1"                           value="13"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_5_2"                           value="14"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_5_3"                           value="15"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_6_0"                           value="16"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_6_1"                           value="17"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_6_2"                           value="18"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_6_3"                           value="19"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_7_0"                           value="20"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_7_1"                           value="21"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_7_2"                           value="22"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_7_3"                           value="23"/>
+        <enum name="STD_VIDEO_AV1_MESA_LEVEL_MAX"                           value="31"/>
+    </enums>
     <extensions>
         <extension name="vulkan_video_codecs_common" comment="protect with VULKAN_VIDEO_CODEC_COMMON_H_" supported="vulkan">
             <require>
@@ -1195,6 +1504,49 @@ The current public version of video.xml is maintained in the default branch
                 <type name="StdVideoEncodeH265PictureInfo"/>
                 <type name="StdVideoEncodeH265ReferenceInfoFlags"/>
                 <type name="StdVideoEncodeH265ReferenceInfo"/>
+            </require>
+        </extension>
+        <extension name="vulkan_video_codec_av1mesa" comment="protect with VULKAN_VIDEO_CODEC_AV1MESA_H_" supported="vulkan">
+            <require>
+                <type name="vk_video/vulkan_video_codecs_common.h"/>
+                <type name="StdVideoAV1MESAProfile"/>
+                <type name="StdVideoAV1MESALevel"/>
+
+                <type name="StdVideoAV1MESAFilmGrainFlags"/>
+                <type name="StdVideoAV1MESAFilmGrainParameters"/>
+                <type name="StdVideoAV1MESAGlobalMotionFlags"/>
+                <type name="StdVideoAV1MESAGlobalMotion"/>
+                <type name="StdVideoAV1MESALoopRestoration"/>
+                <type name="StdVideoAV1MESATileInfoFlags"/>
+                <type name="StdVideoAV1MESATileInfo"/>
+                <type name="StdVideoAV1MESAQuantizationFlags"/>
+                <type name="StdVideoAV1MESAQuantization"/>
+                <type name="StdVideoAV1MESACDEF"/>
+                <type name="StdVideoAV1MESADeltaQFlags"/>
+                <type name="StdVideoAV1MESADeltaQ"/>
+                <type name="StdVideoAV1MESASegmentationFlags"/>
+                <type name="StdVideoAV1MESASegmentation"/>
+                <type name="StdVideoAV1MESALoopFilterFlags"/>
+                <type name="StdVideoAV1MESALoopFilter"/>
+                <type name="StdVideoAV1MESAFrameHeaderFlags"/>
+                <type name="StdVideoAV1MESAFrameHeader"/>
+                <type name="StdVideoAV1MESAScreenCoding"/>
+                <type name="StdVideoAV1MESATimingInfoFlags"/>
+                <type name="StdVideoAV1MESATimingInfo"/>
+                <type name="StdVideoAV1MESAColorConfigFlags"/>
+                <type name="StdVideoAV1MESAColorConfig"/>
+                <type name="StdVideoAV1MESASequenceHeaderFlags"/>
+                <type name="StdVideoAV1MESASequenceHeader"/>
+                <type name="StdVideoAV1MESATile"/>
+                <type name="StdVideoAV1MESATileList"/>
+            </require>
+        </extension>
+        <extension name="vulkan_video_codec_av1mesa_decode" comment="protect with VULKAN_VIDEO_CODEC_AV1MESA_DECODE_H_" supported="vulkan">
+            <require>
+                <type name="vk_video/vulkan_video_codec_av1mesa.h"/>
+                <type name="VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_API_VERSION_0_9_9"/>
+                <enum name="VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_SPEC_VERSION" value="VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_VERSION_0_9_9"/>
+                <enum name="VK_STD_VULKAN_VIDEO_CODEC_AV1_DECODE_EXTENSION_NAME" value="&quot;VK_STD_vulkan_video_codec_av1_decode&quot;"/>
             </require>
         </extension>
     </extensions>

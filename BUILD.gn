@@ -66,6 +66,8 @@ source_set("vulkan_headers") {
     "include/vk_video/vulkan_video_codec_h265std_decode.h",
     "include/vk_video/vulkan_video_codec_h265std_encode.h",
     "include/vk_video/vulkan_video_codec_h265std.h",
+    "vk_video/vulkan_video_codec_av1mesa.h",
+    "vk_video/vulkan_video_codec_av1mesa_decode.h",
     "include/vk_video/vulkan_video_codecs_common.h",
   ]
   public_configs = [ ":vulkan_headers_config" ]
