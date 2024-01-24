@@ -69,7 +69,7 @@ extern "C" {
 #define VK_API_VERSION_1_0 VK_MAKE_API_VERSION(0, 1, 0, 0)// Patch version should always be set to 0
 
 // Version of this file
-#define VK_HEADER_VERSION 274
+#define VK_HEADER_VERSION 275
 
 // Complete version of this file
 #define VK_HEADER_VERSION_COMPLETE VK_MAKE_API_VERSION(0, 1, 3, VK_HEADER_VERSION)
@@ -15385,7 +15385,7 @@ typedef VkPhysicalDeviceTexelBufferAlignmentProperties VkPhysicalDeviceTexelBuff
 
 // VK_QCOM_render_pass_transform is a preprocessor guard. Do not pass it to API calls.
 #define VK_QCOM_render_pass_transform 1
-#define VK_QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION 3
+#define VK_QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION 4
 #define VK_QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME "VK_QCOM_render_pass_transform"
 typedef struct VkRenderPassTransformBeginInfoQCOM {
     VkStructureType                  sType;
@@ -16225,7 +16225,7 @@ typedef struct VkPhysicalDeviceFragmentDensityMap2PropertiesEXT {
 
 // VK_QCOM_rotated_copy_commands is a preprocessor guard. Do not pass it to API calls.
 #define VK_QCOM_rotated_copy_commands 1
-#define VK_QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION 1
+#define VK_QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION 2
 #define VK_QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME "VK_QCOM_rotated_copy_commands"
 typedef struct VkCopyCommandTransformInfoQCOM {
     VkStructureType                  sType;
